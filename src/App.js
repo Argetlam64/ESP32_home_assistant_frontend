@@ -6,7 +6,8 @@ import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 function App() {
-    const BACKEND_URL = "http://192.168.1.100:8080";
+    //const BACKEND_URL = "http://192.168.1.100:8080";
+    const BACKEND_URL = "http://localhost:8080";    
 
     
     const users = ["Maj", "Masa"]
@@ -15,7 +16,7 @@ function App() {
     
 
     const tasksJSX = <Tasks users={users} BACKEND_URL={BACKEND_URL}/>;
-    const hoursJSX = <Hours/>;
+    const hoursJSX = <Hours users={users} BACKEND_URL={BACKEND_URL}/>;
     const trackingJSX = <Tracking/>;
     const pageArray = [hoursJSX, tasksJSX, trackingJSX];//order of pages
 
