@@ -1,10 +1,21 @@
-import { ListItem, Box, ListItemText, Button } from "@mui/material";
+import { ListItem, Box, ListItemText, Button, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 function Skill({skillName, user, currentHours, goalHours, BACKEND_URL}){
     const [currentHourValue, setCurrentHourValue] = useState(currentHours);
     const [percentage, setPercentage] = useState((currentHourValue / goalHours) * 100);
+
+    //Menu opening logic
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     async function increment(incrementValue){ 
         try{
@@ -35,11 +46,7 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL}){
         catch(err){
             console.error("Failoure incrementing skill: "  + err);
         }
-    }
-
-    async function deleteSkill(){
-
-    }
+    }  
 
     return(
         <ListItem sx={{boxShadow: 3, borderRadius: "0.8rem", mt: "0.8rem", background: `linear-gradient(to right, #b1f2c7 ${percentage}%, #edaaa8 ${percentage}%)`}}>
@@ -47,7 +54,28 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL}){
             
             <Box>
                 {currentHourValue} / {goalHours}
-                <Button variant="contained" sx={{backgroundColor: "#edaaa8", ml: "0.4rem"}} onClick={() => {increment(-1)}}>-</Button>
+                <Button 
+                    variant="contained" 
+                    sx={{backgroundColor: "#3cd0dc", ml: "0.4rem"}} 
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick} id="settings-button"
+                >
+                    <SettingsIcon/>
+                </Button>
+
+                <Menu 
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{'aria-labelledby': 'settings-button',}}
+                >
+                    <MenuItem onClick={handleClose}>Edit values</MenuItem>
+                    <MenuItem onClick={handleClose}>Delete skill</MenuItem>
+                    <MenuItem onClick={handleClose}>Archive skill</MenuItem>
+                </Menu>
                 <Button variant="contained" sx={{backgroundColor: "#b1f2c7", ml: "0.4rem"}} onClick={() => {increment(1)}}>+</Button>
             </Box>
         </ListItem>
