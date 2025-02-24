@@ -1,13 +1,14 @@
-import Tasks from "./components/tasks";
-import NavBar from "./components/navbar";
-import Hours from "./components/hours";
-import Tracking from "./components/tracking";
 import { Box } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Hours from "./components/hours";
+import NavBar from "./components/navbar";
+import Tasks from "./components/tasks";
+import Tracking from "./components/tracking";
 
 function App() {
-    //const BACKEND_URL = "http://192.168.1.100:8080";
-    const BACKEND_URL = "http://localhost:8080";    
+    const BACKEND_URL = "http://146.212.169.241:8080";
+    //const BACKEND_URL = "http://146.212.169.241:8080"; //public
+    //const BACKEND_URL = "http://localhost:8080";    
 
     
     const users = ["Maj", "Masa"]
