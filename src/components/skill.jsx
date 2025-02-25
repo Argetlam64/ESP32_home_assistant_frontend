@@ -3,7 +3,7 @@ import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-function Skill({skillName, user, currentHours, goalHours, BACKEND_URL}){
+function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData}){
     const [currentHourValue, setCurrentHourValue] = useState(currentHours);
     const [percentage, setPercentage] = useState((currentHourValue / goalHours) * 100);
 
@@ -48,6 +48,19 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL}){
         }
     }  
 
+    async function handleDelete(){
+        const response = await fetch(`${BACKEND_URL}/skills?user=${user}&skillName=${skillName}&currentHours=${currentHourValue}`, {method: "DELETE"});
+        console.log(response);
+        if(response.statusText == "OK"){
+            setData(prev => {//delete item from current items
+                return prev.filter(item => (item.skillName != skillName || item.currentHours != currentHourValue));
+            })
+        }
+        else{
+            console.log("Deletion failed");
+        }
+    }
+
     return(
         <ListItem sx={{boxShadow: 3, borderRadius: "0.8rem", mt: "0.8rem", background: `linear-gradient(to right, #b1f2c7 ${percentage}%, #edaaa8 ${percentage}%)`}}>
             <ListItemText>{skillName}</ListItemText>
@@ -73,7 +86,7 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL}){
                     MenuListProps={{'aria-labelledby': 'settings-button',}}
                 >
                     <MenuItem onClick={handleClose}>Edit values</MenuItem>
-                    <MenuItem onClick={handleClose}>Delete skill</MenuItem>
+                    <MenuItem onClick={handleDelete}>Delete skill</MenuItem>
                     <MenuItem onClick={handleClose}>Archive skill</MenuItem>
                 </Menu>
                 <Button variant="contained" sx={{backgroundColor: "#b1f2c7", ml: "0.4rem"}} onClick={() => {increment(1)}}>+</Button>

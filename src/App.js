@@ -6,9 +6,8 @@ import Tasks from "./components/tasks";
 import Tracking from "./components/tracking";
 
 function App() {
-    const BACKEND_URL = "http://146.212.169.241:8080";
     //const BACKEND_URL = "http://146.212.169.241:8080"; //public
-    //const BACKEND_URL = "http://localhost:8080";    
+    const BACKEND_URL = "http://localhost:8080";    
 
     
     const users = ["Maj", "Masa"]

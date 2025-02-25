@@ -33,7 +33,15 @@ function SkillList({users, BACKEND_URL}){
                 <List>
                     {data.map((item, id) => {
                         //console.log(item.skillName);
-                        return <Skill skillName={item.skillName} user={item.user} goalHours={item.goalHours} currentHours={item.currentHours} key={"skillItem" + id} BACKEND_URL={BACKEND_URL}/>
+                        return <Skill 
+                            skillName={item.skillName} 
+                            user={item.user} 
+                            goalHours={item.goalHours} 
+                            currentHours={item.currentHours} 
+                            key={"skillItem" + id}
+                            BACKEND_URL={BACKEND_URL}
+                            setData={setData}
+                        />
                     })}
                 </List>
             </Box>
