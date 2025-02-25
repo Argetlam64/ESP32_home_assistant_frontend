@@ -3,8 +3,9 @@ import { Container, Typography, Box, List, ListItem, ListItemText, Switch, IconB
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 
-function TaskList({tasks, setTasks, users, BACKEND_URL}){
+function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData}){
     const [currentUser, setCurrentUser] = useState(users[0]);
+    const [currentPoints, setCurrentPoints] = useState(userData[currentUser].points);
     useEffect(() => {//get data from the backend to show it
         console.log("User changed to " + currentUser);
         async function getData(){
@@ -72,7 +73,13 @@ function TaskList({tasks, setTasks, users, BACKEND_URL}){
 
         if(responseJson.modifiedCount){
             handleDelete(id);
-            
+            setUserData(prev => ({
+                ...prev,
+                [currentUser]:{
+                    points: currentPoints + tasks[id].points
+                }
+            }))
+            setCurrentPoints(prev => prev + tasks[id].points);
         }
         else{
             console.log("Failed to update...");
@@ -90,9 +97,14 @@ function TaskList({tasks, setTasks, users, BACKEND_URL}){
         
         <Box sx={{mt: "1rem", boxShadow: 3, p:"1rem", mb: "1.6rem", backgroundColor: "white", borderRadius: "10px"}}>
         <Typography variant="h4" style={{marginTop: "0.8rem"}}>Current tasks:</Typography>
+
         <Select value={currentUser} onChange={handleUserChange}>
             {users.map(user => <MenuItem value={user} key={user}>{user}</MenuItem>)}
         </Select>
+        <Typography>Current points: {currentPoints}</Typography>
+
+        
+
             <List>
                 {tasks.map((task, id) => {
                     const bgColor = task.finished ? "#b1f2c7" : "#edaaa8";

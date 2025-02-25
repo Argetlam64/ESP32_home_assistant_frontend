@@ -11,6 +11,7 @@ function App() {
     
     
     const [users, setUsers] = useState([]);
+    const [userData, setUserData] = useState({});
     const [pageArray, setPageArray] = useState([]);
     const [currentPageJsx, setCurrentPageJsx] = useState(<></>);
     const [currentPageIndex, setCurrentPageIndex] = useState(1);
@@ -20,8 +21,17 @@ function App() {
         async function getUsers(){
             const response = await fetch(`${BACKEND_URL}/users`);
             const responseJson = await response.json();
-            const userArray = responseJson.map(item => item.name);
-            setUsers(userArray);
+            setUsers(responseJson.map(item => item.name));
+            responseJson.forEach(item => {
+                setUserData(prev => ({
+                    ...prev,
+                    [item.name]: {
+                        points: item.points,
+                        hours: item.hours
+                    }
+                }))
+            })
+            
         }   
         getUsers();
         
@@ -29,7 +39,7 @@ function App() {
     
     //update page data when users update (otherwise you do not see users)
     useEffect(() => {
-        const tasksJSX = <Tasks users={users} BACKEND_URL={BACKEND_URL}/>;
+        const tasksJSX = <Tasks users={users} BACKEND_URL={BACKEND_URL} userData={userData} setUserData={setUserData}/>;
         const hoursJSX = <Hours users={users} BACKEND_URL={BACKEND_URL}/>;
         const trackingJSX = <Tracking/>;
         setPageArray([hoursJSX, tasksJSX, trackingJSX]);
