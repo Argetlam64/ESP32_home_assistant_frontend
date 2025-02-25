@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Typography, Box, List, ListItem, ListItemText, Switch, IconButton, Select, MenuItem } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import DoneIcon from '@mui/icons-material/Done';
 
 function TaskList({tasks, setTasks, users, BACKEND_URL}){
     const [currentUser, setCurrentUser] = useState(users[0]);
@@ -52,6 +53,33 @@ function TaskList({tasks, setTasks, users, BACKEND_URL}){
         })
     }
 
+    async function handleComplete(id){
+        const response = await fetch(BACKEND_URL + "/users", {
+            method: "PUT",
+            headers: {
+                  "Content-Type": "application/json",
+            },
+              body: JSON.stringify({
+                user: tasks[id].user,
+                hoursIncrement: 0,
+                pointsIncrement: tasks[id].points
+              }),
+        });
+
+        const responseJson = await response.json();
+        //console.log(responseJson);
+        console.log(`User: ${tasks[id].user}, points: ${tasks[id].points}`);
+
+        if(responseJson.modifiedCount){
+            handleDelete(id);
+            
+        }
+        else{
+            console.log("Failed to update...");
+        }
+        
+    }
+
     function handleUserChange({target}){    
         console.log(target.value);
         setCurrentUser(target.value);
@@ -68,11 +96,14 @@ function TaskList({tasks, setTasks, users, BACKEND_URL}){
             <List>
                 {tasks.map((task, id) => {
                     const bgColor = task.finished ? "#b1f2c7" : "#edaaa8";
+                    const completeIcon = task.finished ? <DoneIcon/> : <DeleteIcon/>;
+                    const completeFunction = task.finished ? (async () => await handleComplete(id)) : (() => handleDelete(id))
+
                     return(
                     <ListItem sx={{borderRadius: "0.8rem", boxShadow: 2, mt: "0.8rem", backgroundColor: bgColor}} key={`listItem-${id}`}>
                         <ListItemText primary={task.taskName} secondary={`${task.user}: ${task.points}`}></ListItemText>
                         <Box>
-                            <IconButton aria-label="delete" onClick={() => handleDelete(id)}><DeleteIcon /></IconButton>
+                            <IconButton aria-label="delete" onClick={completeFunction}>{completeIcon}</IconButton>
                             <Switch checked={task.finished} onChange={() => handleChange(id)}></Switch>
                         </Box>
                     </ListItem>);

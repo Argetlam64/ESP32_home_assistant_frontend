@@ -53,7 +53,7 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData})
         console.log(response);
         if(response.statusText == "OK"){
             setData(prev => {//delete item from current items
-                return prev.filter(item => (item.skillName != skillName || item.currentHours != currentHourValue));
+                return prev.filter(item => (item.skillName != skillName || item.currentHours != currentHours));
             })
         }
         else{
