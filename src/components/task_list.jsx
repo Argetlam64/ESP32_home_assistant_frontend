@@ -92,6 +92,11 @@ function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData}){
         setCurrentUser(target.value);
     };
 
+    useEffect(() => {
+        setCurrentPoints(userData[currentUser].points);
+        console.log(userData);
+    }, [currentUser]);
+
     return (
     <Container maxWidth="sm">
         
