@@ -1,11 +1,23 @@
-import { ListItem, Box, ListItemText, Button, Menu, MenuItem } from "@mui/material";
+import { ListItem, Box, ListItemText, Button, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, Typography, TextField } from "@mui/material";
 import { useState } from "react";
-import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
+
+
 
 function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData, archived}){
     const [currentHourValue, setCurrentHourValue] = useState(currentHours);
+    //For background
     const [percentage, setPercentage] = useState((currentHourValue / goalHours) * 100);
+    //for opening dialog (edit value option in MenuOptions)
+    const [popupOpen, setPopupOpen] = useState(false);
+    //for editing values -> saves form data
+    const [editName, setEditName] = useState(skillName);
+    const [editHours, setEditHours] = useState(currentHours);
+    const [editGoal, setEditGoal] = useState(goalHours);
+
+    const [titleName, setTitleName] = useState(skillName);
+    const [goalValue, setGoalValue] = useState(goalHours);
+
 
     //Menu opening logic
     const [anchorEl, setAnchorEl] = useState(null);
@@ -81,14 +93,33 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData, 
         }
     }
 
+    async function handleEdit(e){
+        e.preventDefault();
+        const data = {
+            editName,
+            editHours,
+            editGoal,
+            skillName,
+            user
+        }
 
+        fetch( BACKEND_URL + "/skills/edit", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+        setPercentage((editHours / editGoal) * 100);
+        setTitleName(editName);
+        setCurrentHourValue(editHours);
+        setGoalValue(editGoal);
+    }
 
     return(
         <ListItem sx={{boxShadow: 3, borderRadius: "0.8rem", mt: "0.8rem", background: `linear-gradient(to right, #b1f2c7 ${percentage}%, #edaaa8 ${percentage}%)`}}>
-            <ListItemText>{skillName}</ListItemText>
+            <ListItemText>{titleName}</ListItemText>
             
             <Box>
-                {currentHourValue} / {goalHours}
+                {currentHourValue} / {goalValue}
                 <Button 
                     variant="contained" 
                     sx={{backgroundColor: "#3cd0dc", ml: "0.4rem"}} 
@@ -99,18 +130,95 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData, 
                 >
                     <SettingsIcon/>
                 </Button>
-
                 <Menu 
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{'aria-labelledby': 'settings-button',}}
-                >
-                    <MenuItem onClick={handleClose}>Edit values</MenuItem>
-                    <MenuItem onClick={handleDelete}>Delete skill</MenuItem>
-                    <MenuItem onClick={handleArchive}>{archived ? "Move to active" : "Archive skill"}</MenuItem>
-                </Menu>
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                    'aria-labelledby': 'settings-button',
+                    disableListWrap: true, // Prevents arrow key & letter-based selection
+                    autoFocus: false, // Prevents auto-focusing items
+                }}
+                disableAutoFocusItem
+            >
+                <MenuItem onClick={() => setPopupOpen(true)}>•Edit values</MenuItem>
+                <Dialog open={popupOpen} onClose={() => {setPopupOpen(false)}} disableAutoFocus disableEnforceFocus>
+                    <DialogTitle>Edit skill</DialogTitle>
+                    <form onSubmit={handleEdit}>
+
+                        <Box sx={{pr: "1rem", pl: "1rem"}}> 
+                            <Typography>Skill name:</Typography>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Input Skill Name"
+                                value={editName}
+                                onChange={({target}) => {setEditName(target.value);}}
+                                sx={{mt:"0.8rem", mb: "0.4rem"}}
+                            />
+                        </Box>
+
+                        <Box sx={{pr: "1rem", pl: "1rem"}}>
+                            <Typography>Goal hours:</Typography>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Input number of hours:"
+                                value={editGoal}
+                                sx={{mt:"0.8rem", mb: "0.4rem"}}
+                                onChange={({target}) => {
+                                    const data = target.value;
+                                    if(data === ""){
+                                        setEditGoal("");
+                                    }
+                                    else if(!isNaN(data)){
+                                        const intData = parseInt(data);
+                                        if(intData >= 0){
+                                            setEditGoal(data);
+                                        }
+                                    }
+                                }}
+                            />
+                        </Box>
+
+                        <Box sx={{pr: "1rem", pl: "1rem"}}>
+                            <Typography>Current hours:</Typography>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Input number of hours:"
+                                value={editHours}
+                                sx={{mt:"0.8rem", mb: "0.4rem"}}
+                                onChange={({target}) => {
+                                    const data = target.value;
+                                    if(data === ""){
+                                        setEditHours("");
+                                    }
+                                    else if(!isNaN(data)){
+                                        const intData = parseInt(data);
+                                        if(intData >= 0){
+                                            setEditHours(intData);
+                                        }
+                                    }
+                                }}
+                            />
+                        </Box>
+
+                    <DialogActions>
+                    <Button onClick={() => setPopupOpen(false)}>Close</Button>
+                        <Button onClick={() => {setPopupOpen(false); handleClose();}} type="submit">Finish</Button>
+                    </DialogActions>
+                    </form>
+                    
+                </Dialog>
+
+                <MenuItem onClick={() => {handleArchive(); handleClose();}}>{archived ? "•Move to active" : "•Archive skill"}</MenuItem>
+
+                <MenuItem onClick={() => {handleDelete(); handleClose();}}>•Delete skill</MenuItem>
+
+            </Menu>
+
                 <Button variant="contained" sx={{backgroundColor: "#b1f2c7", ml: "0.4rem"}} onClick={() => {increment(1)}}>+</Button>
             </Box>
         </ListItem>
