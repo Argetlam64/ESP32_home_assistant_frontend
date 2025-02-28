@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Typography, Box, List, ListItem, ListItemText, Switch, IconButton, Select, MenuItem } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
+import capitaliseFirst from "../functions";
 
 function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, categories}){
     const [currentUser, setCurrentUser] = useState(users[0]);
@@ -114,6 +115,8 @@ function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, c
         setCategory(target.value);
     }
 
+
+
     
 
     return (
@@ -128,7 +131,7 @@ function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, c
         <Typography>Current points: {currentPoints}</Typography>
 
         <Select value={category} onChange={handleCategoryChange}>
-            {categories.map(item => <MenuItem value={item.name} key={"cat-" + item.name}>{item.name}</MenuItem>)}
+            {categories.map(item => <MenuItem value={item.name} key={"cat-" + item.name}>{capitaliseFirst(item.name)}</MenuItem>)}
         </Select>
 
         

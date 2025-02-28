@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { TextField, Button, Container, Typography, Box, MenuItem, Select, mergeSlotProps } from "@mui/material";
+import capitaliseFirst from "../functions";
 
 const MyForm = ({ setTasks, users, BACKEND_URL, categories}) => {
     const marginTopValue = "0.8rem";
@@ -84,7 +85,7 @@ const MyForm = ({ setTasks, users, BACKEND_URL, categories}) => {
                 <Select value={category} fullWidth onChange={handleCategoryChange}>
                     {categories.map(item =>{ 
                             if(item.name != "all"){
-                                return( <MenuItem value={item.name} key={"cat-" + item.name}>{item.name}</MenuItem>)
+                                return( <MenuItem value={item.name} key={"cat-" + item.name}>{capitaliseFirst(item.name)}</MenuItem>)
                             }
                         })}
                 </Select>
