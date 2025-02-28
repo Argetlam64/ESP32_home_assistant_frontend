@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextField, Button, Container, Typography, Box, MenuItem, Select, mergeSlotProps } from "@mui/material";
 import capitaliseFirst from "../functions";
 
-const MyForm = ({ setTasks, users, BACKEND_URL, categories}) => {
+const MyForm = ({ setTasks, users, BACKEND_URL, categories, currentUser}) => {
     const marginTopValue = "0.8rem";
     let numbers = [];
     for(let i = 1; i < 10; i++){
@@ -41,13 +41,14 @@ const MyForm = ({ setTasks, users, BACKEND_URL, categories}) => {
             headers: {
                   "Content-Type": "application/json",
             },
-              body: JSON.stringify(jsonData),
-          })
-
-
-        setTasks(prev => {//adds the task to the current frontend
-            return [ ...prev, jsonData]
+                body: JSON.stringify(jsonData),
         })
+
+        if(user == currentUser){
+            setTasks(prev => {//adds the task to the current frontend
+                return [ ...prev, jsonData]
+            })
+        }
         //resets data in the form
         setPoints(1);
         setTaskName("");

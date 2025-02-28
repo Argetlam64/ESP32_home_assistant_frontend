@@ -3,7 +3,7 @@ import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData}){
+function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData, archived}){
     const [currentHourValue, setCurrentHourValue] = useState(currentHours);
     const [percentage, setPercentage] = useState((currentHourValue / goalHours) * 100);
 
@@ -19,13 +19,12 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData})
 
     async function increment(incrementValue){ 
         try{
-            console.log(BACKEND_URL + "/skills");
+            //console.log(BACKEND_URL + "/skills");
             const data = {
                 user: user,
                 skillName: skillName,
                 increment: incrementValue
             };
-            console.log(BACKEND_URL + "/skills");
 
             if(currentHourValue <= 0 && incrementValue <= 0){
                 return;
@@ -46,7 +45,28 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData})
         catch(err){
             console.error("Failoure incrementing skill: "  + err);
         }
-    }  
+    }
+
+    async function handleArchive(){
+        try{
+            const data = {
+                user,
+                skillName,
+                archived: !archived
+            }
+            await fetch( BACKEND_URL + "/skills", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            const response = await fetch(BACKEND_URL + "/skills?user=" + user);
+            const responseJson = await response.json();
+            setData(responseJson);
+        }
+        catch(err){
+            console.error("Failoure archiving a skill: " + err);
+        }
+    }
 
     async function handleDelete(){
         const response = await fetch(`${BACKEND_URL}/skills?user=${user}&skillName=${skillName}&currentHours=${currentHourValue}`, {method: "DELETE"});
@@ -60,6 +80,8 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData})
             console.log("Deletion failed");
         }
     }
+
+
 
     return(
         <ListItem sx={{boxShadow: 3, borderRadius: "0.8rem", mt: "0.8rem", background: `linear-gradient(to right, #b1f2c7 ${percentage}%, #edaaa8 ${percentage}%)`}}>
@@ -87,7 +109,7 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData})
                 >
                     <MenuItem onClick={handleClose}>Edit values</MenuItem>
                     <MenuItem onClick={handleDelete}>Delete skill</MenuItem>
-                    <MenuItem onClick={handleClose}>Archive skill</MenuItem>
+                    <MenuItem onClick={handleArchive}>{archived ? "Move to active" : "Archive skill"}</MenuItem>
                 </Menu>
                 <Button variant="contained" sx={{backgroundColor: "#b1f2c7", ml: "0.4rem"}} onClick={() => {increment(1)}}>+</Button>
             </Box>
