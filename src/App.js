@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React, { use, useEffect, useState } from "react";
 import Hours from "./components/hours";
 import NavBar from "./components/navbar";
-import Tasks from "./components/tasks";
+import Tasks from "./components/tasks/tasks";
 import Tracking from "./components/tracking";
 
 function App() {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Container, Typography, Box, MenuItem, Select, mergeSlotProps } from "@mui/material";
 
-const MyForm = ({tasks, setTasks, users, BACKEND_URL}) => {
+const MyForm = ({ setTasks, users, BACKEND_URL, categories}) => {
     const marginTopValue = "0.8rem";
     let numbers = [];
     for(let i = 1; i < 10; i++){
@@ -11,6 +11,7 @@ const MyForm = ({tasks, setTasks, users, BACKEND_URL}) => {
     const [points, setPoints] = useState(numbers[0]);
     const [user, setUser] = useState(users[0]);
     const [taskName, setTaskName] = useState("");
+    const [category, setCategory] = useState("daily");
     
 
     function handleTaskName({target}){
@@ -25,10 +26,14 @@ const MyForm = ({tasks, setTasks, users, BACKEND_URL}) => {
         setPoints(target.value);
     }
 
+    function handleCategoryChange({target}){
+        setCategory(target.value);
+    }
+
     async function handleSubmit(e){
         e.preventDefault();
 
-        const jsonData = {user: user, taskName: taskName, points: points, finished: false};//makes an object to send to database and stuff
+        const jsonData = {user: user, taskName: taskName, points: points, finished: false, category: category};//makes an object to send to database and stuff
 
         fetch(BACKEND_URL + "/tasks", {//sends data to backend
             method: "POST",
@@ -73,6 +78,15 @@ const MyForm = ({tasks, setTasks, users, BACKEND_URL}) => {
                 <Typography style={{marginTop: marginTopValue}}>Points:</Typography>
                 <Select label="User" fullWidth value={points} onChange={handlePointsChange}>
                     {numbers.map(num => <MenuItem value={num} key={num}>{num}</MenuItem>)}
+                </Select>
+                
+                <Typography style={{marginTop: marginTopValue}}>Category:</Typography>
+                <Select value={category} fullWidth onChange={handleCategoryChange}>
+                    {categories.map(item =>{ 
+                            if(item.name != "all"){
+                                return( <MenuItem value={item.name} key={"cat-" + item.name}>{item.name}</MenuItem>)
+                            }
+                        })}
                 </Select>
 
                 <Button type="submit" variant="contained" style={{marginTop: marginTopValue}}>Add Task</Button>
