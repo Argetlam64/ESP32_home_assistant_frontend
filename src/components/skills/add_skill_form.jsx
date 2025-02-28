@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { TextField, Button, Container, Typography, Box, MenuItem, Select, mergeSlotProps } from "@mui/material";
+import { TextField, Button, Container, Typography, Box, MenuItem, Select } from "@mui/material";
 
-function AddSkillForm({users, BACKEND_URL}){
+function AddSkillForm({users, BACKEND_URL, setData}){
     const [skillName, setSkillName] = useState("");
-    const [goalHours, setGoalHours] = useState(20);
+    const [goalHours, setGoalHours] = useState(100);
     const [user, setUser] = useState(users[0]);
     const marginTopValue = "0.8rem";
 
@@ -13,18 +13,25 @@ function AddSkillForm({users, BACKEND_URL}){
             skillName,
             goalHours,
             user,
-            currentHours: 0
+            currentHours: 0,
+            archived: false
         }
         
-        console.log(`User: ${data.user}, skill: ${data.skillName} for ${data.goalHours} hours on ${BACKEND_URL + "/skills"}`);
-        
-        fetch(BACKEND_URL + "/skills", {//sends data to backend
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        });
+        //console.log(`User: ${data.user}, skill: ${data.skillName} for ${data.goalHours} hours on ${BACKEND_URL + "/skills"}`);
+        if(skillName && goalHours && user){
+            fetch(BACKEND_URL + "/skills", {//sends data to backend
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+            });
+            setSkillName("");
+            setData(prev => {
+                console.log([...prev, data]);
+                return [...prev, data];
+            });
+        }
     }
 
     return(

@@ -2,8 +2,8 @@ import Skill from "./skill";
 import { useEffect, useState } from "react";
 import { TextField, Button, Container, Typography, Box, MenuItem, Select, List } from "@mui/material";
 
-function SkillList({users, BACKEND_URL}){
-    const [data, setData] = useState([]);
+function SkillList({users, BACKEND_URL, skillHours, data, setData}){
+    
     const [user, setUser] = useState(users[0]);
     const [archived, setArchived] = useState(false);
 

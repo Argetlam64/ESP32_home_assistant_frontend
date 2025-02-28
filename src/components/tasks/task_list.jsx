@@ -11,7 +11,6 @@ function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, c
     const [category, setCategory] = useState("");
 
     useEffect(() => {//get data from the backend to show it
-        console.log("User changed to " + currentUser);
         async function getData(){
             try{
                 const data = await fetch(`${BACKEND_URL}/tasks?user=${currentUser}`);
@@ -88,8 +87,6 @@ function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, c
         });
 
         const responseJson = await response.json();
-        //console.log(responseJson);
-        //console.log(`User: ${tasks[id].user}, points: ${tasks[id].points}`);
 
         if(responseJson.modifiedCount){
             handleDelete(id);
@@ -107,17 +104,6 @@ function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, c
         
     }
 
-    function handleUserChange({target}){    
-        setCurrentUser(target.value);
-    };
-
-    function handleCategoryChange({target}){
-        setCategory(target.value);
-    }
-
-
-
-    
 
     return (
     <Container maxWidth="sm">
@@ -125,12 +111,12 @@ function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, c
         <Box sx={{mt: "1rem", boxShadow: 3, p:"1rem", mb: "1.6rem", backgroundColor: "white", borderRadius: "10px"}}>
         <Typography variant="h4" style={{marginTop: "0.8rem"}}>Current tasks:</Typography>
 
-        <Select value={currentUser} onChange={handleUserChange}>
+        <Select value={currentUser} onChange={({target}) => setCurrentUser(target.value)}>
             {users.map(user => <MenuItem value={user} key={user}>{user}</MenuItem>)}
         </Select>
-        <Typography>Current points: {currentPoints}</Typography>
+        <Typography >Current points: {currentPoints}</Typography>
 
-        <Select value={category} onChange={handleCategoryChange}>
+        <Select value={category} onChange={({target}) => setCategory(target.value)}>
             {categories.map(item => <MenuItem value={item.name} key={"cat-" + item.name}>{capitaliseFirst(item.name)}</MenuItem>)}
         </Select>
 
