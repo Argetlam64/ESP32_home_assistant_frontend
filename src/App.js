@@ -1,9 +1,10 @@
 import { Box } from "@mui/material";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Hours from "./components/skills/hours";
 import NavBar from "./components/navbar";
 import Tasks from "./components/tasks/tasks";
 import Tracking from "./components/tracking";
+import Calendar from "./components/calendar/calendar";
 
 function App() {
     //const BACKEND_URL = "http://146.212.169.241:8080"; //public
@@ -42,7 +43,8 @@ function App() {
         const tasksJSX = <Tasks users={users} BACKEND_URL={BACKEND_URL} userData={userData} setUserData={setUserData}/>;
         const hoursJSX = <Hours users={users} BACKEND_URL={BACKEND_URL}/>;
         const trackingJSX = <Tracking/>;
-        setPageArray([hoursJSX, tasksJSX, trackingJSX]);
+        const callendarJSX = <Calendar/>;
+        setPageArray([hoursJSX, tasksJSX, trackingJSX, callendarJSX]);
         setCurrentPageJsx(tasksJSX);
     }, [users])
 

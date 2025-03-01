@@ -4,6 +4,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
 import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
 import AddchartRoundedIcon from '@mui/icons-material/AddchartRounded';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { useState } from 'react';
 
 function NavBar({currentPageIndex, setCurrentPageIndex}){
@@ -20,6 +21,7 @@ function NavBar({currentPageIndex, setCurrentPageIndex}){
           <BottomNavigationAction label="Hours" icon={<AlarmRoundedIcon/>} />
           <BottomNavigationAction label="Tasks" icon={<ChecklistRoundedIcon/>} />
           <BottomNavigationAction label="Tracking" icon={<AddchartRoundedIcon />} />
+          <BottomNavigationAction label="Calendar" icon={<CalendarMonthIcon />} />
         </BottomNavigation>
       </Box>
     );
