@@ -4,11 +4,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 import capitaliseFirst from "../functions";
 
-function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, categories}){
-    const [currentUser, setCurrentUser] = useState(users[0]);
+function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, categories, currentUser, setCurrentUser}){
+    
     const [currentPoints, setCurrentPoints] = useState(userData[currentUser].points);
     
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState("all");
 
     useEffect(() => {//get data from the backend to show it
         async function getData(){

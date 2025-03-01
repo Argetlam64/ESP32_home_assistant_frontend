@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 function Tasks({users, BACKEND_URL, userData, setUserData}){
     const [tasks, setTasks] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [currentUser, setCurrentUser] = useState(users[0]);
 
     //run on every start
     useEffect(() => {
@@ -29,6 +30,7 @@ function Tasks({users, BACKEND_URL, userData, setUserData}){
             users={users} 
             BACKEND_URL={BACKEND_URL}
             categories={categories}
+            currentUser={currentUser}
         >
         </NewTaskForm>
         <TaskList 
@@ -39,6 +41,8 @@ function Tasks({users, BACKEND_URL, userData, setUserData}){
             userData={userData} 
             setUserData={setUserData} 
             categories={categories}
+            currentUser={currentUser}
+            setCurrentUser={setCurrentUser}
         >
         </TaskList>
     </div>);

@@ -144,7 +144,7 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData, 
                     autoFocus: false, // Prevents auto-focusing items
                 }}
                 disableAutoFocusItem
-            >
+                >
                 <MenuItem onClick={() => setPopupOpen(true)}>•Edit values</MenuItem>
                 <Dialog open={popupOpen} onClose={() => {setPopupOpen(false)}} disableAutoFocus disableEnforceFocus>
                     <DialogTitle>Edit skill</DialogTitle>
