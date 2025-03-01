@@ -12,7 +12,7 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData, 
     const [popupOpen, setPopupOpen] = useState(false);
     //for editing values -> saves form data
     const [editName, setEditName] = useState(skillName);
-    const [editHours, setEditHours] = useState(currentHours);
+    const [editHours, setEditHours] = useState(currentHourValue);
     const [editGoal, setEditGoal] = useState(goalHours);
 
     const [titleName, setTitleName] = useState(skillName);
@@ -49,7 +49,7 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData, 
             
             setCurrentHourValue(current => {
                 const newValue = current + incrementValue;
-                setPercentage((newValue / goalHours) * 100);
+                setPercentage((newValue / goalValue) * 100);
                 return newValue;
             });
             
@@ -108,11 +108,14 @@ function Skill({skillName, user, currentHours, goalHours, BACKEND_URL, setData, 
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         });
-        setPercentage((editHours / editGoal) * 100);
+        
         setTitleName(editName);
         setCurrentHourValue(editHours);
         setGoalValue(editGoal);
+        setPercentage((editHours / editGoal) * 100);
     }
+
+
 
     return(
         <ListItem sx={{boxShadow: 3, borderRadius: "0.8rem", mt: "0.8rem", background: `linear-gradient(to right, #b1f2c7 ${percentage}%, #edaaa8 ${percentage}%)`}}>
