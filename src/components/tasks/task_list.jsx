@@ -23,14 +23,8 @@ function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, c
             }   
         }
         getData();//call the async function only when app is loaded  
+        setCurrentPoints(userData[currentUser].points);//update points when changing user
     }, [currentUser]);
-
-    //change points when user changes
-    useEffect(() => {
-        setCurrentPoints(userData[currentUser].points);
-    }, [currentUser]);
-
-
 
     useEffect(() => {
         try{
@@ -89,7 +83,28 @@ function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, c
         const responseJson = await response.json();
 
         if(responseJson.modifiedCount){
-            handleDelete(id);
+            const completeData = {
+                user: currentUser,
+                category: category,
+                taskName: tasks[id]
+            }
+            const response = await fetch(BACKEND_URL + "/tasks", {
+                method: "PUT",
+                headers: {
+                      "Content-Type": "application/json",
+                },
+                  body: JSON.stringify({
+                    user: tasks[id].user,
+                    taskName: tasks[id].taskName,
+                    finished: true,
+                    completed: true
+                  }),
+            });
+
+            setTasks(prev => {
+                return prev.filter((item, index) => id != index)
+            })
+
             setUserData(prev => ({
                 ...prev,
                 [currentUser]:{
@@ -124,13 +139,13 @@ function TaskList({tasks, setTasks, users, BACKEND_URL, userData, setUserData, c
 
             <List>
                 {tasks.map((task, id) => {
-                    if(task.category === category || category == "all"){
+                    if((task.category === category || category == "all") && !task.completed){
                         const bgColor = task.finished ? "#b1f2c7" : "#edaaa8";
                         const completeIcon = task.finished ? <DoneIcon/> : <DeleteIcon/>;
                         const completeFunction = task.finished ? (async () => await handleComplete(id)) : (() => handleDelete(id))
                         return(
                         <ListItem sx={{borderRadius: "0.8rem", boxShadow: 2, mt: "0.8rem", backgroundColor: bgColor}} key={`listItem-${id}`}>
-                            <ListItemText primary={task.taskName} secondary={`${task.user}: ${task.points} (${task.category})`}></ListItemText>
+                            <ListItemText primary={task.taskName} secondary={`${task.user}: ${task.points} (${task.category}) ${task.completed}`}></ListItemText>
                             <Box>
                                 <IconButton aria-label="delete" onClick={completeFunction}>{completeIcon}</IconButton>
                                 <Switch checked={task.finished} onChange={() => handleChange(id)}></Switch>

@@ -19,19 +19,14 @@ const MyForm = ({ setTasks, users, BACKEND_URL, categories, currentUser}) => {
         try{
             const jsonData = {user: user, taskName: taskName, points: points, finished: false, category: category};//makes an object to send to database and stuff
 
-            const postData = await fetch(BACKEND_URL + "/tasks", {//sends data to backend
+            await fetch(BACKEND_URL + "/tasks", {//sends data to backend
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                     body: JSON.stringify(jsonData),
             })
-            /*
-            if(user == currentUser){
-                setTasks(prev => {//adds the task to the current frontend
-                    return [ ...prev, jsonData]
-                })
-            }*/
+            
             //resets data in the form
             setPoints(1);
             setTaskName("");
